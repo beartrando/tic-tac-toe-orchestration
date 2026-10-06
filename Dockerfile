@@ -40,9 +40,6 @@ RUN pnpm install --offline --frozen-lockfile
 RUN mkdir -p ./services/orchestration/src/contracts/proto
 RUN pnpm --filter orchestration proto:generate
 
-RUN mkdir -p ./shared/errors/src/contracts/proto
-RUN pnpm --filter @shared/errors proto:generate
-
 RUN pnpm --filter orchestration prisma:generate
 
 # ---------- DEV ----------
