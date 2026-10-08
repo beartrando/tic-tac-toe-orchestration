@@ -8,7 +8,7 @@ export class AnonymousSignInUseCase {
         deviceId: string,
     ): Promise<authProto.SessionResponse | null> {
         const request: authProto.AnonymousSignInRequest = {deviceId};
-        const result =  await authClient.anonymousSignIn(request);
+        const result = await authClient.anonymousSignIn(request);
         // logger.log(result);
         return result;
     }
