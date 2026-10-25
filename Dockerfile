@@ -16,7 +16,9 @@ COPY tsconfig.base.json ./
 
 COPY services/orchestration/package*.json ./services/orchestration/
 COPY services/orchestration/jest.config.js ./services/orchestration/
+COPY services/orchestration/jest.setup.ts ./services/orchestration/
 COPY services/orchestration/tsconfig.json ./services/orchestration/
+COPY services/orchestration/jest.setup.ts ./services/orchestration/
 COPY services/orchestration/src ./services/orchestration/src/
 
 RUN apt-get update \
@@ -27,7 +29,7 @@ RUN apt-get update \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN corepack enable && corepack prepare pnpm@11.9.0 --activate
+RUN corepack enable && corepack prepare pnpm@11.28.4 --activate
 
 
 # ---------- DEPS ----------
@@ -39,15 +41,17 @@ RUN pnpm install --offline --frozen-lockfile --ignore-scripts
 RUN mkdir -p ./services/orchestration/src/contracts/proto
 RUN pnpm --filter orchestration proto:generate
 
+RUN pnpm --filter @shared/logger build
 RUN pnpm --filter @shared/cache-store build
 RUN pnpm --filter @shared/state-store build
 RUN pnpm --filter @shared/timer build
-RUN pnpm --filter @shared/logger build
+RUN pnpm --filter @shared/kafka-manager build
+RUN pnpm --filter @shared/persistent-logger build
+RUN pnpm --filter @shared/pg-boss-manager build
 RUN pnpm --filter @shared/grpc-client-manager build
 RUN pnpm --filter @shared/errors proto:generate
 RUN pnpm --filter @shared/errors build
-RUN pnpm --filter @shared/kafka-manager build
-RUN pnpm --filter @shared/pg-boss-manager build
+RUN pnpm --filter @shared/otel build
 
 RUN pnpm --filter orchestration prisma:generate
 

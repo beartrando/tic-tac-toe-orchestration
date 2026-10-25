@@ -46,7 +46,8 @@
     "pg-boss": "^12.15.0",
     "jsonwebtoken": "^9.0.3",
     "kafkajs": "^2.2.4",
-    "bcrypt": "^6.0.0"
+    "bcrypt": "^6.0.0",
+    "@shared/otel": "workspace:*"
   },
   "prisma": {
     "schema": "./src/infrastructure/db/prisma/schema.prisma"
