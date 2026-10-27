@@ -14,12 +14,12 @@ COPY package.json ./
 COPY pnpm-workspace.yaml ./
 COPY tsconfig.base.json ./
 
-COPY services/orchestration/package*.json ./services/orchestration/
-COPY services/orchestration/jest.config.js ./services/orchestration/
-COPY services/orchestration/jest.setup.ts ./services/orchestration/
-COPY services/orchestration/tsconfig.json ./services/orchestration/
-COPY services/orchestration/jest.setup.ts ./services/orchestration/
-COPY services/orchestration/src ./services/orchestration/src/
+COPY services/server/orchestration/package*.json ./services/server/orchestration/
+COPY services/server/orchestration/jest.config.js ./services/server/orchestration/
+COPY services/server/orchestration/jest.setup.ts ./services/server/orchestration/
+COPY services/server/orchestration/tsconfig.json ./services/server/orchestration/
+COPY services/server/orchestration/jest.setup.ts ./services/server/orchestration/
+COPY services/server/orchestration/src ./services/server/orchestration/src/
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -38,7 +38,7 @@ FROM base AS deps
 RUN pnpm fetch
 RUN pnpm install --offline --frozen-lockfile --ignore-scripts
 
-RUN mkdir -p ./services/orchestration/src/contracts/proto
+RUN mkdir -p ./services/server/orchestration/src/contracts/proto
 RUN pnpm --filter orchestration proto:generate
 
 RUN pnpm --filter @shared/logger build
@@ -58,7 +58,7 @@ RUN pnpm --filter orchestration prisma:generate
 # ---------- DEV ----------
 FROM deps AS dev
 
-COPY services/orchestration/tsconfig.test.json ./services/orchestration/
+COPY services/server/orchestration/tsconfig.test.json ./services/server/orchestration/
 
 ENV NODE_ENV=development
 
@@ -128,6 +128,6 @@ RUN printf "%s\n" "$VERSION" > VERSION
 
 LABEL org.opencontainers.image.version="$VERSION"
 
-WORKDIR /usr/src/app/services/orchestration
+WORKDIR /usr/src/app/services/server/orchestration
 
 CMD ["pnpm", "--filter", "orchestration", "migrate:deploy"]
