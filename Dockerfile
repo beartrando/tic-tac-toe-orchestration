@@ -52,8 +52,10 @@ RUN pnpm --filter @shared/errors proto:generate
 RUN pnpm --filter @shared/errors build
 RUN pnpm --filter @shared/otel build
 
-RUN pnpm --filter orchestration prisma:generate
+RUN rm -rf node_modules \
+    && pnpm install --offline --frozen-lockfile --ignore-scripts
 
+RUN pnpm --filter orchestration prisma:generate
 
 # ---------- DEV ----------
 FROM deps AS dev
